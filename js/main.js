@@ -67,3 +67,97 @@ function createNewToDo (e) {
 $(".submitToDo").on( 'click', createNewToDo);
 
 $(".complete-button").on( 'click', markComplete);
+
+
+function setupStorage() {
+  if(!localStorage.toDos) {
+    localStorage.toDos = JSON.stringify([]);
+  }
+  if(localStorage.completetoDos) {
+    localStorage.completetoDos = JSON.stringify([]);
+  }
+}
+
+function addTodoToStorage(todo) {
+  var data = JSON.parse(localStorage.toDos);
+  data.push(todo);
+  localStorage.toDos = JSON.stringify(data);
+}
+
+function removeTodoFromStorage(todo) {
+  var data = JSON.parse(localStorage.toDos);
+  var new_data = data.filter(function (item) {
+    return item.id != todo.id;
+  });
+  localStorage.toDos = JSON.stringify(new_data);
+}
+
+function clearStorage() {
+  localStorage.toDos = JSON.stringify([]);
+  localStorage.completeTodos = JSON.stringify([]);
+}
+function buildTodoHtml(item, buttonId) {
+  st = '<tr><td>' + item.name + '</td><td>' + item.date +
+       '</td><td><span class="label label-danger">' +
+       item.status + '</span></td><td><button ';
+  st += buttonId? 'id="' + item.id + '"' : '';
+  st += 'class="btn btn-primary complete-todo">Complete</button></td>';
+  return st;
+}
+
+function renderToDos () {
+  console.log(localStorage.toDos);
+  console.log(localStorage.completeTodos);
+  var data = JSON.parse(localStorage.toDos);
+  if (data.length > 0) {
+    data.forEach(function (element) {
+      $("#tdbody").append(buildTodoHtml(element, true));
+    });
+  }
+  var data = JSON.parse(localStorage.completeTodos);
+  data.pop();
+  data.forEach(function (element) {
+    $("#ctdbody").append(buildTodoHtml(element, false));
+  });
+}
+
+renderToDos();
+
+function markCompleted () {
+  $(this).closest('tr').remove();
+
+  var id = $(this).attr('id');
+  console.log(id);
+  var data = JSON.parse(localStorage.toDos);
+  markedToDo = data.filter(function (item) {
+    return item.id == id;
+  });
+  console.log(markedToDo);
+  addToCompleted(markedToDo[0]);
+}
+
+function addToCompleted (todo) {
+  removeTodoFromStorage(todo);
+  var data = JSON.parse(localStorage.completeTodos);
+  data.push(todo);
+  localStorage.completeTodos = JSON.stringify(data);
+  console.log(localStorage.completeTodos);
+  $("#ctdbody").append(buildTodoHtml(todo, false));
+}
+
+$("#newTodoForm").submit(function (e) {
+  e.preventDefault();
+  var newToDo = {id: Math.floor(Math.random()*100),
+                 name: $('#todoName').val(),
+                 date: $('#todoDate').val(),
+                 status: 'Complete'};
+  addTodoToStorage(newToDo);
+  console.log(newToDo);
+  console.log(localStorage.toDos);
+  $("#tdbody").append(buildTodoHtml(newToDo, true));
+  $('.complete-todo').on('click', markCompleted);
+})
+
+$('.complete-todo').on('click', markCompleted);
+
+$('#clrLS').on('click', clearStorage)
