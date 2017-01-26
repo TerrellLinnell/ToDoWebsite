@@ -1,0 +1,28 @@
+#hello{
+  color: black;
+}
+.my-container{
+  *background-image: url('https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSDiKmecKUb8Zl1puS8F_imBAa5HOFTWGLWLlwYSY5oE0NUeyLnDA');*/
+
+}
+.my-jumbotron{
+  background-image: url('http://theawesomer.com/photos/2013/12/awesome_places_1.jpg');
+  background-size: 100% 100%;
+}
+
+.complete-button{
+  border-style: double;
+  border-radius: 9px;
+}
+
+.my-table{
+
+
+
+}
+
+.submitToDo{
+  border-style: groove;
+  color: white;
+  background-color: green;
+}
